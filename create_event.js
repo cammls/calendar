@@ -34,8 +34,8 @@ router.get('/event', function(req, res) {
 
 });
 app.use('/api', router);
-app.listen(3001);
-console.log('Server listenning on port 3001');
+app.listen(3000);
+console.log('Server listenning on port 3000');
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/calendar'];
