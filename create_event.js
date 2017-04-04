@@ -29,13 +29,13 @@ router.get('/event', function(req, res) {
       var email = req.query.email;
       // Authorize a client with the loaded credentials, then call the
       // Google Calendar API.
-      authorize(JSON.parse(content), listEvents,email);
+      authorize(JSON.parse(content), listEvents,email,res);
     });
 
 });
 app.use('/api', router);
-app.listen(3000);
-console.log('Server listenning on port 3000');
+app.listen(3001);
+console.log('Server listenning on port 3001');
 // If modifying these scopes, delete your previously saved credentials
 // at ~/.credentials/calendar-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/calendar'];
@@ -51,7 +51,7 @@ var TOKEN_PATH = TOKEN_DIR + 'calendar-nodejs-quickstart.json';
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback, email) {
+function authorize(credentials, callback, email,res) {
   var clientSecret = credentials.installed.client_secret;
   var clientId = credentials.installed.client_id;
   var redirectUrl = credentials.installed.redirect_uris[0];
@@ -64,7 +64,7 @@ function authorize(credentials, callback, email) {
       getNewToken(oauth2Client, callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client,email);
+      callback(oauth2Client,email,res);
     }
   });
 }
@@ -124,21 +124,21 @@ function storeToken(token) {
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 
-function listEvents(auth,email) {
+function listEvents(auth,email,res) {
   var event = {
-   'summary': 'Test API',
-   'location': '',
-   'description': '',
+   'summary': 'Invitation resto Alcazar',
+   'location': 'Alcazar',
+   'description': 'Cet évènement a été créé automatiquement grâce à un script Node JS (by Camille :p)',
    'start': {
-     'dateTime': '2017-05-28T09:00:00-07:00',
+     'dateTime': '2017-04-02T20:00:00-00:00',
    'timeZone': 'America/Los_Angeles',
    },
    'end': {
-     'dateTime': '2017-05-28T17:00:00-09:00',
+     'dateTime': '2017-04-02T21:00:00-00:00',
    'timeZone': 'America/Los_Angeles',
    },
    'recurrence': [
-     'RRULE:FREQ=DAILY;COUNT=2'
+     'RRULE:FREQ=DAILY;COUNT=1'
    ],
    'attendees': [
      {'email': email}
@@ -162,5 +162,6 @@ function listEvents(auth,email) {
     return;
   }
   console.log('Event created: %s', event.htmlLink);
+  res.json({message: 'Event created'})
 });
 }
